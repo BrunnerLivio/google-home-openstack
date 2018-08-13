@@ -1,0 +1,29 @@
+version: 2
+jobs:
+ deploy:
+   machine: true
+   steps:
+     - checkout
+     # start proprietary DB using private Docker image
+     # with credentials stored in the UI
+     - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+     # build the application image
+     - run: docker build -t $DOCKER_USER/google-home-openstack:$CIRCLE_TAG .
+
+     - run: docker tag $DOCKER_USER/google-home-openstack:$CIRCLE_TAG $DOCKER_USER/google-home-openstack:latest
+     # deploy the image
+     - run: docker push $DOCKER_USER/google-home-openstack:$CIRCLE_TAG
+     - run: docker push $DOCKER_USER/google-home-openstack:latest
+
+workflows:
+  version: 2
+  deploy_all:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # Semantiv Versioning
+              only: /^([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$/

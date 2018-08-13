@@ -1,0 +1,12 @@
+{
+    "distribution-not-found": "Exgüsä, aber Distribution  {{distribution}} hani de emfall ned gfunde",
+    "created-vm": "I ha für di e neui virtuelli Maschine erstellt mitem Name {{name}}",
+    "available-sizes": "Me händ dGrössi {{ sizes }} vorhande.",
+    "available-distributions": "Me händ Distributione {{ distributions }}",
+    "the-size": "{{ size }} wo {{ disk }} Gigabyte Speichergrössi hed und {{ ram }} RAM",
+    "no-running-instance": "Es sind kei Instanze am laufe",
+    "one-running-instance": "Es isch ein Instanz am laufe mit em name {{ serverNames }}",
+    "multiple-running-instances": "Es sind {{ instancesLength }} Instanze am laufe mit de Näme {{ serverNames }}",
+    "size-does-not-exist": "dGrössi {{ size }} existiert gar nöd.",
+    "wrong-distribution-version-combo": "dVersion {{ version }} existiert ned bi de Distribution {{ distribution }}"
+}

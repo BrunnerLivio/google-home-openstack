@@ -1,0 +1,12 @@
+{
+    "distribution-not-found": "Sorry, I could not find the distribution {{distribution}}",
+    "created-vm": "Successfully created a the virtual machine {{name}}",
+    "available-sizes": "We have the sizes {{ sizes }}",
+    "available-distributions": "We have the distributions {{ distributions }}",
+    "the-size": "{{size}} which has {{disk}} Gigabyte disk space and {{ram}} of RAM",
+    "no-running-instance": "There are no running instances",
+    "one-running-instance": "There is one running instance with the name {{ serverNames }}",
+    "multiple-running-instances": "There are {{ instancesLength }} running instance with the names {{ serverNames }}",
+    "size-does-not-exist": "The size {{ size }} does not exist.",
+    "wrong-distribution-version-combo": "The version {{ version }} does not exist in combination with the distribution {{ distribution }}"
+}

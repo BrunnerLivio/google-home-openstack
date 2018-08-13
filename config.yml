@@ -1,0 +1,37 @@
+---
+adafruit:
+  host: io.adafruit.com
+  port: 8883
+  key: <KEY>
+  username: <USERNAME>
+  feedIdIn: <FEED_MESSAGES_FROM_DIALOGFLOW>
+  feedIdOut: <FEED_MESSAGES_TO_DIALOGFLOW>
+
+openstack:
+  username: <USERNAME>
+  password: <PASSWORD>
+  projectId: ""
+  # (optional) domain of openstack
+  domain: ""
+  servers:
+    # The server url
+    glance: ""
+    nova: ""
+    keystone: ""
+  sizes:
+    # The flavor reference from openstack
+    small: ""
+    medium: ""
+    large: ""
+  distributions:
+    - name: ubuntu
+      versions:
+      - name: "18.04"
+        # The image reference from openstack
+        ref: ""
+      - name: "17.10"
+        ref: ""
+    - name: windows
+      versions:
+      - name: "2016"
+        ref: ""
