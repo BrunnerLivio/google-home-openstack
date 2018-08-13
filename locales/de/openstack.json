@@ -8,5 +8,6 @@
     "one-running-instance": "Es isch ein Instanz am laufe mit em name {{ serverNames }}",
     "multiple-running-instances": "Es sind {{ instancesLength }} Instanze am laufe mit de Näme {{ serverNames }}",
     "size-does-not-exist": "dGrössi {{ size }} existiert gar nöd.",
-    "wrong-distribution-version-combo": "dVersion {{ version }} existiert ned bi de Distribution {{ distribution }}"
+    "wrong-distribution-version-combo": "dVersion {{ version }} existiert ned bi de Distribution {{ distribution }}",
+    "current-version": "Ich bi im momänt dVersion {{ version }}"
 }
