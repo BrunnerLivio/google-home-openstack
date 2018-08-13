@@ -15,7 +15,7 @@ import { AppSettings } from './common/app-settings.interface';
 
 const PrintVersion = () => {
     const packageJson = require('../package.json');
-    Logger.info(`Running on version ${packageJson.version}`);
+    Logger.info(`Running on version v${packageJson.version}`);
 }
 
 const Run = () => {
