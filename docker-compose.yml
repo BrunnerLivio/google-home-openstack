@@ -1,0 +1,16 @@
+version: '2'
+services:
+  adafruit_forwarder:
+    image: brunnel6/google-home-openstack
+    environment:
+      - CONFIG=my-config.yml
+      - LOG_LEVEL=debug
+    ports:
+      - "3000:3000"
+    restart: always
+
+  watchtower:
+    image: v2tec/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30
