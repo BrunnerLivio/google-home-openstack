@@ -12,8 +12,15 @@ import './plugins/openstack';
 
 import { AppSettings } from './common/app-settings.interface';
 
+
+const PrintVersion = () => {
+    const packageJson = require('../package.json');
+    Logger.info(`Running on version ${packageJson.version}`);
+}
+
 const Run = () => {
     Welcome();
+    PrintVersion();
     try {
         // Read Config
         const configPath = process.env.CONFIG || join(__dirname, '../config.yml');

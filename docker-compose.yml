@@ -5,6 +5,8 @@ services:
     environment:
       - CONFIG=my-config.yml
       - LOG_LEVEL=debug
+    volumes:
+      - ./my-config.yml:/var/lib/google-home-openstack/my-config.yml
     ports:
       - "3000:3000"
     restart: always
