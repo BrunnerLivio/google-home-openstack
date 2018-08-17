@@ -2,7 +2,6 @@ import { join, resolve } from 'path';
 import * as i18next from 'i18next';
 import * as Backend from 'i18next-node-fs-backend';
 import { Logger } from '../util/logger';
-import { rejects } from 'assert';
 
 const LANG = process.env.GHO_LANG || 'en';
 
@@ -30,9 +29,10 @@ export class TranslationHandler {
         });
     }
 
-    public async changeLanguage(lang: string) {
+    public async changeLanguage(lang: string): Promise<any>{
         return new Promise((resolve, reject) => {
-            console.log(`Changing language from ${i18next.language} to ${lang}`);
+            if (i18next.language === lang) return resolve();
+            Logger.silly(`Changing language from ${i18next.language} to ${lang}`);
             i18next.changeLanguage(lang, (err, t) => {
                 if (err) return reject(err);
                 return resolve(t);

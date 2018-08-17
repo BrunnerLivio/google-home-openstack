@@ -7,6 +7,7 @@ import { ConfigService } from './core/config.service';
 import { map } from 'p-iteration';
 import { TranslationHandler } from './translation-handler';
 import { TranslationFunction } from 'i18next';
+import { DialogflowResponse } from './common/dialogflow-response';
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
 
@@ -46,11 +47,11 @@ export class GoogleHomeOpenstack {
         return isCompatible;
     }
 
-    private async executeOnMessageOfPlugin(plugin: PluginContext, data: IncomingMessage<any>) {
+    private async executeOnMessageOfPlugin(plugin: PluginContext, incomingMessage: IncomingMessage<any>) {
         Logger.silly(`Sending message to ${plugin.name}`);
         let message;
         try {
-            message = await plugin.instance.onMessage(data);
+            message = await plugin.instance.onMessage(incomingMessage);
         }
         catch (err) {
             Logger.error(`Error when executing "onMessage" on Plugin ${plugin.name}`, err);
@@ -59,9 +60,15 @@ export class GoogleHomeOpenstack {
 
         // Explicitly check if it really is a string
         // .. so Google Home say accidiantly an object
-        if (message && typeof message === 'string') {
+        if (message) {
+            let data: DialogflowResponse;
+            if (typeof message === 'string') {
+                data = { fulfillmentText: message };
+            } else {
+                data = message;
+            }
             try {
-                this.messageHandler.sendMessage({ requestId: data.requestId, data: message });
+                this.messageHandler.sendMessage({ requestId: incomingMessage.requestId, data });
             }
             catch (err) {
                 Logger.error(`Fatal error! Could not send message!`);
