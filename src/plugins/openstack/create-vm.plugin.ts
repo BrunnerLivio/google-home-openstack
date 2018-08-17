@@ -67,20 +67,30 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
 
     mapOpenstackParams(params: CreateVMParameters) {
         let flavorRef, distribution, version, imageRef;
-        if (params.size) {
-            flavorRef = this.getFlavorBySize(params.size);
+
+        if (!params.distributions) {
+            throw new UndefinedParameterError('distributions')
         }
-        if (params.distributions) {
-            distribution = this.getDistribution(params.distributions);
+
+        distribution = this.getDistribution(params.distributions);
+
+        if (!params.version) {
+            throw new UndefinedParameterError('version');
         }
-        if (params.version) {
-            version = this.getVersion(distribution, params.version);
-            imageRef = version.ref;
+
+        imageRef = this.getVersion(distribution, params.version).ref;
+
+        if (!params.size) {
+            throw new UndefinedParameterError('size');
         }
+
+        flavorRef = this.getFlavorBySize(params.size);
 
         if (!params["vm-name"]) {
             throw new UndefinedParameterError('name');
         }
+
+
 
         return {
             name: params["vm-name"],
@@ -103,11 +113,6 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             if (err instanceof OpenstackError) {
                 return {
                     fulfillmentText: err.message,
-                    // followupEventInput: {
-                    //     name: 'Create-VM',
-                    //     parameters: params,
-                    //     languageCode: 'en'
-                    // }
                 };
             } else {
                 Logger.error(err);
