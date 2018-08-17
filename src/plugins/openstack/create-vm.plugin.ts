@@ -115,6 +115,9 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             if (err instanceof OpenstackError) {
                 return {
                     fulfillmentText: err.message,
+                    followupEventInput: {
+                        parameters: params
+                    }
                 };
             } else {
                 Logger.error(err);

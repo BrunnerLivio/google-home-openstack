@@ -11,9 +11,9 @@ export interface DialogflowResponse {
 }
 
 export interface FollowupEventInput {
-    name: string;
+    name?: string;
     languageCode?: string;
-    parameters: any;
+    parameters?: any;
 }
 
 
