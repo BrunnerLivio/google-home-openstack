@@ -8,6 +8,7 @@ import { IncomingMessage } from '../../common/incoming-message.interface';
 import * as i18next from 'i18next';
 import { Logger } from '../../util/logger';
 import { DialogflowResponse } from '../../common/dialogflow-response';
+import { OpenstackHumanService } from './openstack-human.service';
 
 
 export type VMSize = 'small' | 'medium' | 'large';
@@ -34,9 +35,11 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
     private openstack: OpenstackService;
     private config: OpenstackConfig;
     private t: i18next.TranslationFunction;
+    private openstackHuman: OpenstackHumanService;
 
     constructor() {
         this.openstack = OpenstackService.Instance;
+        this.openstackHuman = OpenstackHumanService.Instance;
         this.config = ConfigService.getConfig().openstack;
         this.t = i18next.getFixedT(null, 'openstack');
     }
@@ -67,21 +70,22 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
 
     mapOpenstackParams(params: CreateVMParameters) {
         let flavorRef, distribution, version, imageRef;
-
+        console.log(params);
         if (!params.distributions) {
-            throw new UndefinedParameterError('distributions')
+            throw new UndefinedParameterError(this.t('questions.distribution'))
         }
 
         distribution = this.getDistribution(params.distributions);
 
         if (!params.version) {
-            throw new UndefinedParameterError('version');
+            throw new UndefinedParameterError(this.t('questions.version'));
         }
 
         imageRef = this.getVersion(distribution, params.version).ref;
 
         if (!params.size) {
-            throw new UndefinedParameterError('size');
+            const sizes = this.openstackHuman.listAllSizes();
+            throw new UndefinedParameterError(this.t('questions.size', { sizes }));
         }
 
         flavorRef = this.getFlavorBySize(params.size);
@@ -89,8 +93,6 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
         if (!params["vm-name"]) {
             throw new UndefinedParameterError('name');
         }
-
-
 
         return {
             name: params["vm-name"],

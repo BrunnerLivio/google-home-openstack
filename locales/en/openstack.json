@@ -10,5 +10,10 @@
     "size-does-not-exist": "The size {{ size }} does not exist.",
     "wrong-distribution-version-combo": "The version {{ version }} does not exist in combination with the distribution {{ distribution }}",
     "current-version": "I'm currently version {{ version }}",
-    "undefined-parameter": "What is the {{ parameterName }} of the Virtual Machine?"
+    "undefined-parameter": "What is the {{ parameterName }} of the Virtual Machine?",
+    "questions": {
+        "distribution": "Which distribution should the virtual machine have?",
+        "version": "Which verison of {{ distribution }} do you want to have on your virtual machine?",
+        "size": "What size should the virtual machine have? We have {{ sizes }} "
+    }
 }

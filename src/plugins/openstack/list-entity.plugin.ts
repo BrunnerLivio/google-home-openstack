@@ -8,6 +8,7 @@ import { OpenstackConfig } from '../../common/app-settings.interface';
 import { ConfigService } from '../../core/config.service';
 import { IncomingMessage } from "../../common/incoming-message.interface";
 import * as i18next from 'i18next';
+import { OpenstackHumanService } from './openstack-human.service';
 
 export type OpenstackEntity = 'distribution' | 'version' | 'size';
 
@@ -27,40 +28,26 @@ export class ListEntityPlugin implements IGoogleHomePlugin {
     private openstack: OpenstackService;
     private config: OpenstackConfig;
     private t: i18next.TranslationFunction;
+    private openstackHuman: OpenstackHumanService;
 
     constructor() {
         this.openstack = OpenstackService.Instance;
+        this.openstackHuman = OpenstackHumanService.Instance;
         this.config = ConfigService.getConfig().openstack;
         this.t = i18next.getFixedT(null, 'openstack');
     }
 
-    private async listAllDistributions() {
-        const images = await this.openstack.listImages();
-        const distributions = humanizeList(images.map(image => image.name));
-        return this.t('available-distributions', { distributions });
-    }
 
-    private async listAllSizes() {
-        const sizes = Object.keys(this.config.sizes);
-        const flavors = await this.openstack.listFlavors();
-        const sizesFormatted = sizes.map(size => {
-            const flavorId = this.config.sizes[size];
-            const flavor = flavors.find(flavor => flavor.id === flavorId);
-            const ram = fileSize(converterBase10(Math.floor(flavor.ram / 1000) * 1000, 'MB', 'B')).human('si');
-            return this.t('the-size', { size, disk: flavor.disk, ram }) + ' ';
-        });
-        return this.t('available-sizes', { sizes: humanizeList(sizesFormatted) });
-    }
 
     async onMessage(message: ListEntityMessage): Promise<string> {
         const openstackEntity = message.data.parameters["openstack-entity"];
         let data: string = this.t('not-understand', { ns: 'common' });
         switch (openstackEntity) {
             case 'distribution':
-                data = await this.listAllDistributions();
+                data = await this.openstackHuman.listAllDistributions();
                 break;
             case 'size':
-                data = await this.listAllSizes();
+                data = await this.openstackHuman.listAllSizes();
                 break;
         }
         return data;
