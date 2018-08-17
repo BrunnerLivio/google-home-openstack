@@ -5,13 +5,12 @@ import { Logger } from '../../util/logger';
 import { ConfigService } from '../../core/config.service';
 import { OpenstackConfig } from '../../common/app-settings.interface';
 
-
-
+type Token = { token: string, expires_at: Date };
 const DRY_RUN = process.env.DRY_RUN === 'true';
 
 export class OpenstackService {
     private keystone: any;
-    private general_token: { token: string, expires_at: Date };
+    private general_token: Token;
     private nova: OSWrap.Nova;
     private project_token: string;
     private glance: OSWrap.Glance;
@@ -27,12 +26,12 @@ export class OpenstackService {
         this.serverRepository = new ServerRepository();
     }
 
-    private getToken() {
+    private getToken(): Promise<Token> {
         return new Promise((resolve, reject) => {
             const { username, password, domain } = this.config;
             Logger.debug(`Logging in with user "${username}" on domain "${domain}"`);
             this.keystone.getToken(username, password, domain,
-                async (error, token) => {
+                async (error, token: Token) => {
                     if (error) {
                         Logger.error('Error when trying to get token');
                         if (this.tokenRetries > 2) {
@@ -40,6 +39,7 @@ export class OpenstackService {
                         } else {
                             this.tokenRetries++;
                             const token = await this.getToken();
+                            this.general_token = token;
                             resolve(token);
                         }
                     }

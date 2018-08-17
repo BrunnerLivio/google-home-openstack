@@ -2,10 +2,12 @@ import { GoogleHomePlugin, IGoogleHomePlugin } from '../../core/google-home-plug
 import { OpenstackService } from './openstack.service';
 import { OpenstackConfig, Sizes, Distribution, Version } from '../../common/app-settings.interface';
 import { ConfigService } from '../../core/config.service';
-import { DistributionNotFoundError, VersionNotFoundError, SizeDoesNotExistError } from './errors';
+import { DistributionNotFoundError, VersionNotFoundError, SizeDoesNotExistError, UndefinedParameterError } from './errors';
+import { OpenstackError } from './errors/openstack.error';
 import { IncomingMessage } from '../../common/incoming-message.interface';
 import * as i18next from 'i18next';
 import { Logger } from '../../util/logger';
+import { DialogflowResponse } from '../../common/dialogflow-response';
 
 
 export type VMSize = 'small' | 'medium' | 'large';
@@ -76,6 +78,10 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             imageRef = version.ref;
         }
 
+        if (!params["vm-name"]) {
+            throw new UndefinedParameterError('name');
+        }
+
         return {
             name: params["vm-name"],
             flavorRef,
@@ -86,7 +92,7 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
         };
     }
 
-    async onMessage(message: CreateVMMessage): Promise<string> {
+    async onMessage(message: CreateVMMessage): Promise<DialogflowResponse> {
         const params = message.data.parameters;
         let server;
         try {
@@ -94,8 +100,14 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             await this.openstack.createServer(server);
         }
         catch (err) {
-            if (err instanceof VersionNotFoundError) {
-                return err.message;
+            if (err instanceof OpenstackError) {
+                return {
+                    fulfillmentText: err.message,
+                    followupEventInput: {
+                        name: 'Create-VM',
+                        parameters: params
+                    }
+                };
             } else {
                 Logger.error(err);
                 return this.t('internal-error', { ns: 'common' });

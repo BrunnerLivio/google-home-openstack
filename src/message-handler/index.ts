@@ -5,6 +5,7 @@ import { ConfigService } from '../core/config.service';
 import * as axios from 'axios';
 import { Logger } from '../util/logger';
 import { OutgoingMessage } from '../common/outgoing-message.interface';
+import { DialogflowResponse } from '../common/dialogflow-response';
 
 
 export class MessageHandler {
@@ -33,7 +34,7 @@ export class MessageHandler {
         });
     }
 
-    async sendMessage(value: OutgoingMessage<any>) {
+    async sendMessage(value: OutgoingMessage<DialogflowResponse>) {
         const headers = { 'X-AIO-Key': this.key };
         Logger.debug(`Sending POST to url ${this.streamOutUrl} with headers ${JSON.stringify(headers)} and data ${JSON.stringify({ value })}`)
         await axios.default.post(this.streamOutUrl, { value: JSON.stringify(value) }, { headers })

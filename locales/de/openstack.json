@@ -9,5 +9,6 @@
     "multiple-running-instances": "Es sind {{ instancesLength }} Instanze am laufe mit de Näme {{ serverNames }}",
     "size-does-not-exist": "dGrössi {{ size }} existiert gar nöd.",
     "wrong-distribution-version-combo": "dVersion {{ version }} existiert ned bi de Distribution {{ distribution }}",
-    "current-version": "Ich bi im momänt dVersion {{ version }}"
+    "current-version": "Ich bi im momänt dVersion {{ version }}",
+    "undefined-parameter": "Was isch de {{ parameterName }} vo de Virtuällä Maschinä?"
 }

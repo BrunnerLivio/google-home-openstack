@@ -9,5 +9,6 @@
     "multiple-running-instances": "There are {{ instancesLength }} running instance with the names {{ serverNames }}",
     "size-does-not-exist": "The size {{ size }} does not exist.",
     "wrong-distribution-version-combo": "The version {{ version }} does not exist in combination with the distribution {{ distribution }}",
-    "current-version": "I'm currently version {{ version }}"
+    "current-version": "I'm currently version {{ version }}",
+    "undefined-parameter": "What is the {{ parameterName }} of the Virtual Machine?"
 }

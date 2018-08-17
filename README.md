@@ -30,6 +30,8 @@ git clone https://github.com/brunnel6/google-home-openstack
 vi config.yml
 # Install dependencies
 npm install
+# Build the application
+npm run build
 # Run it
 CONFIG="$(pwd)/config.yml" npm start
 
