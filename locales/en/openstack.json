@@ -1,6 +1,6 @@
 {
     "distribution-not-found": "Sorry, I could not find the distribution {{distribution}}",
-    "created-vm": "Successfully created a the virtual machine {{name}}",
+    "created-vm": "Successfully created the virtual machine {{name}}",
     "available-sizes": "We have the sizes {{ sizes }}",
     "available-distributions": "We have the distributions {{ distributions }}",
     "the-size": "{{size}} which has {{disk}} Gigabyte disk space and {{ram}} of RAM",

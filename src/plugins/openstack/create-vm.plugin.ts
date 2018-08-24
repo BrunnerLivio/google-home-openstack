@@ -17,6 +17,7 @@ export interface CreateVMParameters {
     size: VMSize;
     distributions: string;
     version: string;
+    count: number;
     'vm-name': string;
     'vm-location': string;
     'vm-port': string;
@@ -70,7 +71,6 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
 
     mapOpenstackParams(params: CreateVMParameters) {
         let flavorRef, distribution, version, imageRef;
-        console.log(params);
         if (!params.distributions) {
             throw new UndefinedParameterError(this.t('questions.distribution'))
         }
@@ -107,19 +107,18 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
     async onMessage(message: CreateVMMessage): Promise<DialogflowResponse> {
         const params = message.data.parameters;
         let server;
+        let serverCount = params.count || 1;
+        let serverCreated = 0;
         try {
             server = this.mapOpenstackParams(params);
-            await this.openstack.createServer(server);
+            for (serverCreated = 0; serverCreated < serverCount; serverCreated++) {
+                await this.openstack.createServer(server);
+            }
         }
         catch (err) {
             if (err instanceof OpenstackError) {
                 return {
                     fulfillmentText: err.message,
-                    followupEventInput: {
-                        name: 'incomplete',
-                        languageCode: i18next.language,
-                        parameters: params
-                    }
                 };
             } else {
                 Logger.error(err);
