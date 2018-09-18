@@ -11,6 +11,7 @@ import { DialogflowResponse } from '../../common/dialogflow-response';
 import { OpenstackHumanService } from './openstack-human.service';
 import { FloatingIPCreateDto } from './interfaces';
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export type VMSize = 'small' | 'medium' | 'large';
 
@@ -99,8 +100,9 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             flavorRef,
             imageRef: imageRef,
             networks: [{
-                uuid: '8105a814-769e-46a2-96b1-7579195ad76f'
-            }]
+                uuid: this.config.defaultNetworkUUID
+            }],
+            key_name: this.config.defaultKeyPairName
         };
     }
 
@@ -114,7 +116,9 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             for (serverCreated = 0; serverCreated < serverCount; serverCreated++) {
                 const newServer = await this.openstack.createServer(server);
                 const floatingIp: FloatingIPCreateDto = await this.openstack.createFloatingIP(this.config.defaultFloatingIpPool);
-                await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip);
+                // TODO: Check state of vm instead of timeout
+                await sleep(300);
+                await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip)
             }
         }
         catch (err) {
