@@ -10,6 +10,7 @@ import { Logger } from '../../util/logger';
 import { DialogflowResponse } from '../../common/dialogflow-response';
 import { OpenstackHumanService } from './openstack-human.service';
 import { FloatingIPCreateDto } from './interfaces';
+import { CompanyDNSService } from './company-dns/company-dns.service';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -38,12 +39,15 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
     private config: OpenstackConfig;
     private t: i18next.TranslationFunction;
     private openstackHuman: OpenstackHumanService;
+    private companyDNSSerivce: CompanyDNSService;
 
     constructor() {
         this.openstack = OpenstackService.Instance;
         this.openstackHuman = OpenstackHumanService.Instance;
-        this.config = ConfigService.getConfig().openstack;
+        const config = ConfigService.getConfig();
+        this.config = config.openstack;
         this.t = i18next.getFixedT(null, 'openstack');
+        this.companyDNSSerivce = new CompanyDNSService(config);
     }
 
     private getFlavorBySize(size: VMSize): string {
@@ -118,7 +122,10 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
                 const floatingIp: FloatingIPCreateDto = await this.openstack.createFloatingIP(this.config.defaultFloatingIpPool);
                 // TODO: Check state of vm instead of timeout
                 await sleep(this.config.associatingIpSleep || 1000);
-                await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip)
+                await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip);
+                if (ConfigService.getConfig().companyDNSAPIAddress) {
+                    await this.companyDNSSerivce.setupDNS(params["vm-name"], floatingIp.ip);
+                }
             }
         }
         catch (err) {
