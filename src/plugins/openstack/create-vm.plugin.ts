@@ -99,8 +99,9 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             flavorRef,
             imageRef: imageRef,
             networks: [{
-                uuid: '8105a814-769e-46a2-96b1-7579195ad76f'
-            }]
+                uuid: this.config.defaultNetworkUUID
+            }],
+            key_name: this.config.defaultKeyPairName
         };
     }
 
