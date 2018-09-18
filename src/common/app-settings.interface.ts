@@ -20,7 +20,10 @@ export interface OpenstackConfig {
     servers: Servers;
     sizes: Sizes;
     defaultFloatingIpPool: string;
+    defaultKeyPairName: string;
+    defaultNetworkUUID: string
     distributions: Distribution[];
+    associatingIpSleep: number;
 }
 
 export interface Distribution {
