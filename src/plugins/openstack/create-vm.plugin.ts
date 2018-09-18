@@ -9,6 +9,7 @@ import * as i18next from 'i18next';
 import { Logger } from '../../util/logger';
 import { DialogflowResponse } from '../../common/dialogflow-response';
 import { OpenstackHumanService } from './openstack-human.service';
+import { FloatingIPCreateDto } from './interfaces';
 
 
 export type VMSize = 'small' | 'medium' | 'large';
@@ -112,6 +113,8 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             server = this.mapOpenstackParams(params);
             for (serverCreated = 0; serverCreated < serverCount; serverCreated++) {
                 await this.openstack.createServer(server);
+                const ip: FloatingIPCreateDto = await this.openstack.createFloatingIP();
+                await this.openstack.associateFloatingIp(server.id, ip.floating_ip.fixed_ip);
             }
         }
         catch (err) {

@@ -4,6 +4,7 @@ import * as  OSWrap from 'openstack-wrapper';
 import { Logger } from '../../util/logger';
 import { ConfigService } from '../../core/config.service';
 import { OpenstackConfig } from '../../common/app-settings.interface';
+import { FloatingIPCreateDto } from './interfaces';
 
 type Token = { token: string, expires_at: Date };
 const DRY_RUN = process.env.DRY_RUN === 'true';
@@ -132,6 +133,44 @@ export class OpenstackService {
                 } else {
                     Logger.debug('Created server');
                     resolve(server);
+                }
+            });
+        });
+    }
+
+    async createFloatingIP(): Promise<FloatingIPCreateDto | any> {
+        return new Promise((resolve, reject) => {
+            Logger.info('Create a new floating IP');
+            this.nova.createFloatingIp({
+                "pool": "nova"
+            }, (error, server) => {
+                if (error) {
+                    const remoteCode = error.detail.remoteCode;
+                    if (remoteCode >= 400 && remoteCode <= 404 || remoteCode === 409) {
+                        Logger.error('Error while creating a floating IP', error);
+                        return reject(error.detail.remoteMessage);
+                    }
+                } else {
+                    Logger.debug('Created a floating IP');
+                    resolve((server as FloatingIPCreateDto));
+                }
+            });
+        });
+    }
+
+    async associateFloatingIp(serverId: string, ipAddress: string) {
+        return new Promise((resolve, reject) => {
+            Logger.info(`Associating floating IP ${ipAddress} with server ${serverId}`);
+            this.nova.associateFloatingIp(serverId, ipAddress, (error, response) => {
+                if (error) {
+                    const remoteCode = error.detail.remoteCode;
+                    if (remoteCode >= 400 && remoteCode <= 404 || remoteCode === 409) {
+                        Logger.error('Error while associating IP', error);
+                        return reject(error.detail.remoteMessage);
+                    }
+                } else {
+                    Logger.debug('Associated a floating IP');
+                    resolve((response));
                 }
             });
         });
