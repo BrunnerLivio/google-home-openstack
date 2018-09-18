@@ -157,7 +157,6 @@ export class OpenstackService {
     }
 
     async associateFloatingIp(serverId: string, ipAddress: string) {
-        console.log('asdfasdfasdf')
         return new Promise((resolve, reject) => {
             Logger.info(`Associating floating IP ${ipAddress} with server ${serverId}`);
             this.nova.associateFloatingIp(serverId, ipAddress, (error, response) => {
