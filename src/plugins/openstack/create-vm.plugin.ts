@@ -112,9 +112,9 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
         try {
             server = this.mapOpenstackParams(params);
             for (serverCreated = 0; serverCreated < serverCount; serverCreated++) {
-                await this.openstack.createServer(server);
-                const ip: FloatingIPCreateDto = await this.openstack.createFloatingIP();
-                await this.openstack.associateFloatingIp(server.id, ip.floating_ip.fixed_ip);
+                const newServer = await this.openstack.createServer(server);
+                const floatingIp: FloatingIPCreateDto = await this.openstack.createFloatingIP(this.config.defaultFloatingIpPool);
+                await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip);
             }
         }
         catch (err) {
