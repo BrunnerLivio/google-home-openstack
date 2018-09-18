@@ -13,6 +13,8 @@ openstack:
   # Name of the pool which should create a floating ip
   # when a new vm is created
   defaultFloatingIpPool: ""
+  defaultKeyPairName: ""
+  defaultNetworkUUID: ""
   projectId: ""
   # (optional) domain of openstack
   domain: ""
