@@ -1,6 +1,6 @@
 {
   "name": "google-home-openstack",
-  "version": "1.0.6-a",
+  "version": "1.0.7-beta.6",
   "description": "Spawns openstack containers from Google Home using Adafruit",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   "dependencies": {
     "@types/i18next": "^8.4.4",
     "@types/i18next-node-fs-backend": "0.0.29",
+    "await-sleep": "0.0.1",
     "axios": "^0.18.0",
     "byte-converter": "^0.1.4",
     "chalk": "^2.4.1",
