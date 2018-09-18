@@ -19,7 +19,6 @@ export interface CreateVMParameters {
     version: string;
     count: number;
     'vm-name': string;
-    'vm-location': string;
     'vm-port': string;
     'create-vm': string;
 }
