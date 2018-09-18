@@ -11,8 +11,10 @@ import { DialogflowResponse } from '../../common/dialogflow-response';
 import { OpenstackHumanService } from './openstack-human.service';
 import { FloatingIPCreateDto } from './interfaces';
 import { CompanyDNSService } from './company-dns/company-dns.service';
+import * as safename from 'safename';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const replaceAll = (msg, search, replacement) => msg.split(search).join(replacement);
 
 export type VMSize = 'small' | 'medium' | 'large';
 
@@ -81,13 +83,13 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             throw new UndefinedParameterError(this.t('questions.distribution'))
         }
 
-        distribution = this.getDistribution(params.distributions);
+        distribution = this.getDistribution(replaceAll(params.distributions, ' ', ''));
 
         if (!params.version) {
             throw new UndefinedParameterError(this.t('questions.version'));
         }
 
-        imageRef = this.getVersion(distribution, params.version).ref;
+        imageRef = this.getVersion(distribution, replaceAll(params.version, ' ', '')).ref;
 
         if (!params.size) {
             const sizes = this.openstackHuman.listAllSizes();
@@ -137,8 +139,18 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
                 const floatingIp: FloatingIPCreateDto = await this.openstack.createFloatingIP(this.config.defaultFloatingIpPool);
                 // TODO: Check state of vm instead of timeout
                 await this.assoicateFloatingIp(newServer.id, floatingIp.ip);
-                if (ConfigService.getConfig().companyDNSAPIAddress && params["resolve-dns"] === 'true') {
-                    await this.companyDNSSerivce.setupDNS(server.name, floatingIp.ip);
+                const allConfig = ConfigService.getConfig();
+                if (allConfig.companyDNSAPIAddress && params["resolve-dns"] === 'true') {
+                    const dnsName = safename.middle(server.name.trim().toLowerCase());
+                    try {
+                        await this.companyDNSSerivce.setupDNS(dnsName, floatingIp.ip);
+                    } catch (err) {
+                        console.log(err);
+                    }
+                    console.log(allConfig.companyDNSDomain.replace('{}', dnsName));
+                    return this.t('created-vm-dns', { domain: allConfig.companyDNSDomain.replace('{}', dnsName), 'interpolation': { 'escapeValue': false } });
+                } else {
+                    return this.t('created-vm', { name: params["vm-name"] });
                 }
             }
         }
@@ -153,7 +165,6 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
             }
         }
 
-        return this.t('created-vm', { name: params["vm-name"] });
     }
 
     async onInit() {

@@ -2,6 +2,7 @@ export interface AppSettings {
     adafruit: Adafruit;
     openstack: OpenstackConfig;
     companyDNSAPIAddress: string;
+    companyDNSDomain: string;
 }
 
 export interface Adafruit {

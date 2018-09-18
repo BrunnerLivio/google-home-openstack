@@ -11,6 +11,7 @@
     "wrong-distribution-version-combo": "dVersion {{ version }} existiert ned bi de Distribution {{ distribution }}",
     "current-version": "Ich bi im momänt dVersion {{ version }}",
     "digital-transformation": "So öppis nänn ich Digiatli Transformation",
+    "created-vm-dns": "Dini VM isch erfolgrich ufgsetzt worde. Du chasch sie ufrüäfä uf de Domain {{ domain }}. Es chönt aber no 1-2 Minute gah",
     "max-floating-ip-attempts-exceeded": "Diä maximal azahl um en Floating IP zunere VM zuezordnere isch agloffe",
     "undefined-parameter": "Was isch de {{ parameterName }} vo de Virtuällä Maschinä?"
 }
