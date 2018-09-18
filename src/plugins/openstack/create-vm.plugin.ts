@@ -124,7 +124,7 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
                 await sleep(this.config.associatingIpSleep || 1000);
                 await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip);
                 if (ConfigService.getConfig().companyDNSAPIAddress) {
-                    await this.companyDNSSerivce.setupDNS(params["vm-name"], floatingIp.ip);
+                        await this.companyDNSSerivce.setupDNS(server.name, floatingIp.ip);
                 }
             }
         }
