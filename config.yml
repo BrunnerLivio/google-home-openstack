@@ -10,6 +10,9 @@ adafruit:
 openstack:
   username: <USERNAME>
   password: <PASSWORD>
+  # Name of the pool which should create a floating ip
+  # when a new vm is created
+  defaultFloatingIpPool: ""
   projectId: ""
   # (optional) domain of openstack
   domain: ""

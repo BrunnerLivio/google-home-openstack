@@ -1,6 +1,6 @@
 {
   "name": "google-home-openstack",
-  "version": "1.0.5-beta",
+  "version": "1.0.6",
   "description": "Spawns openstack containers from Google Home using Adafruit",
   "main": "index.js",
   "scripts": {

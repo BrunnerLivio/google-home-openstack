@@ -19,6 +19,7 @@ export interface OpenstackConfig {
     domain: string;
     servers: Servers;
     sizes: Sizes;
+    defaultFloatingIpPool: string;
     distributions: Distribution[];
 }
 
@@ -43,3 +44,4 @@ export interface Sizes {
     medium: string;
     large: string;
 }
+default_floating_ip_pool

@@ -111,7 +111,7 @@ export class OpenstackService {
         });
     }
 
-    async createServer(settings) {
+    async createServer(settings): Promise<any> {
         if (this.hasTokenExpired()) {
             await this.updateToken();
         }
@@ -138,12 +138,10 @@ export class OpenstackService {
         });
     }
 
-    async createFloatingIP(): Promise<FloatingIPCreateDto | any> {
+    async createFloatingIP(pool: string): Promise<FloatingIPCreateDto | any> {
         return new Promise((resolve, reject) => {
-            Logger.info('Create a new floating IP');
-            this.nova.createFloatingIp({
-                "pool": "nova"
-            }, (error, server) => {
+            Logger.info(`Create a new floating IP in the pool ${pool}`);
+            this.nova.createFloatingIp({ pool }, (error, result) => {
                 if (error) {
                     const remoteCode = error.detail.remoteCode;
                     if (remoteCode >= 400 && remoteCode <= 404 || remoteCode === 409) {
@@ -152,13 +150,14 @@ export class OpenstackService {
                     }
                 } else {
                     Logger.debug('Created a floating IP');
-                    resolve((server as FloatingIPCreateDto));
+                    return resolve(result);
                 }
             });
         });
     }
 
     async associateFloatingIp(serverId: string, ipAddress: string) {
+        console.log('asdfasdfasdf')
         return new Promise((resolve, reject) => {
             Logger.info(`Associating floating IP ${ipAddress} with server ${serverId}`);
             this.nova.associateFloatingIp(serverId, ipAddress, (error, response) => {
