@@ -25,6 +25,7 @@ export interface OpenstackConfig {
     defaultNetworkUUID: string
     distributions: Distribution[];
     associatingIpSleep: number;
+    maxAssociatingIpRetries: number;
 }
 
 export interface Distribution {

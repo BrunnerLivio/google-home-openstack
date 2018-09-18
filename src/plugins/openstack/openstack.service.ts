@@ -214,24 +214,18 @@ export class OpenstackService {
             });
         });
     }
-    async removeServer() {
+    async removeServer(id: string) {
         if (this.hasTokenExpired()) {
             await this.updateToken();
         }
+        Logger.debug(`Remove server ${id}`);
         return new Promise((resolve, reject) => {
-            if (DRY_RUN) {
-                return resolve();
-            }
-            let serverToDelete = this.serverRepository.shiftServer();
-            if (!serverToDelete) {
-                reject('No Servers left!');
-                return;
-            }
-            this.nova.removeServer(serverToDelete.id, (error, data) => {
+            this.nova.removeServer(id, error => {
                 if (error) {
-                    this.serverRepository.addServer(serverToDelete);
+                    Logger.error(`Error while removing server ${id}`, error);
                     reject(error);
                 } else {
+                    Logger.debug(`Removed server ${id}`);
                     resolve();
                 }
             });

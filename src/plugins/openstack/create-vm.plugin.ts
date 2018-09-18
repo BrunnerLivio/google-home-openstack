@@ -2,7 +2,7 @@ import { GoogleHomePlugin, IGoogleHomePlugin } from '../../core/google-home-plug
 import { OpenstackService } from './openstack.service';
 import { OpenstackConfig, Sizes, Distribution, Version } from '../../common/app-settings.interface';
 import { ConfigService } from '../../core/config.service';
-import { DistributionNotFoundError, VersionNotFoundError, SizeDoesNotExistError, UndefinedParameterError } from './errors';
+import { DistributionNotFoundError, VersionNotFoundError, SizeDoesNotExistError, UndefinedParameterError, MaxFloatingIpAttemptsExceededError } from './errors';
 import { OpenstackError } from './errors/openstack.error';
 import { IncomingMessage } from '../../common/incoming-message.interface';
 import * as i18next from 'i18next';
@@ -24,6 +24,7 @@ export interface CreateVMParameters {
     'vm-name': string;
     'vm-port': string;
     'create-vm': string;
+    'resolve-dns': string;
 }
 
 export type CreateVMMessage = IncomingMessage<CreateVMParameters>;
@@ -110,6 +111,20 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
         };
     }
 
+    private async assoicateFloatingIp(serverId: string, ip: string, reconnectingAttempts: number = 0) {
+        Logger.debug('Retrying to associate floating ip');
+        await sleep(this.config.associatingIpSleep || 1000);
+        try {
+            return await this.openstack.associateFloatingIp(serverId, ip);
+        } catch (err) {
+            reconnectingAttempts++;
+            if ((this.config.maxAssociatingIpRetries || 3) <= reconnectingAttempts) {
+                throw new MaxFloatingIpAttemptsExceededError();
+            }
+            return await this.assoicateFloatingIp(serverId, ip, reconnectingAttempts);
+        }
+    }
+
     async onMessage(message: CreateVMMessage): Promise<DialogflowResponse> {
         const params = message.data.parameters;
         let server;
@@ -121,10 +136,9 @@ export class CreateVMPlugin implements IGoogleHomePlugin {
                 const newServer = await this.openstack.createServer(server);
                 const floatingIp: FloatingIPCreateDto = await this.openstack.createFloatingIP(this.config.defaultFloatingIpPool);
                 // TODO: Check state of vm instead of timeout
-                await sleep(this.config.associatingIpSleep || 1000);
-                await this.openstack.associateFloatingIp(newServer.id, floatingIp.ip);
-                if (ConfigService.getConfig().companyDNSAPIAddress) {
-                        await this.companyDNSSerivce.setupDNS(server.name, floatingIp.ip);
+                await this.assoicateFloatingIp(newServer.id, floatingIp.ip);
+                if (ConfigService.getConfig().companyDNSAPIAddress && params["resolve-dns"] === 'true') {
+                    await this.companyDNSSerivce.setupDNS(server.name, floatingIp.ip);
                 }
             }
         }
