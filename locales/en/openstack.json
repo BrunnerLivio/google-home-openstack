@@ -13,10 +13,10 @@
     "undefined-parameter": "What is the {{ parameterName }} of the Virtual Machine?",
     "digital-transformation": "This is what I call digital transformation",
     "max-floating-ip-attempts-exceeded": "The maximum amount of associating an IP with a server has exceeded. Aborting",
-    "created-vm-dns": "Successfully created the virtual machine. You can access your VM through {{ domain }} in approximately five minutes. You can drink now a Coffe for two weeks and you're still faster than the IT.",
+    "created-vm-dns": "Successfully created the virtual machine. You can access your VM through {{ domain }} in approximately two to five minutes. You can now go rave in Berlin and drink Berliner Luft for two weeks and you're still faster than the IT.",
     "questions": {
         "distribution": "Which distribution should the virtual machine have?",
-        "version": "Which verison of {{ distribution }} do you want to have on your virtual machine?",
+        "version": "Which version of {{ distribution }} do you want to have on your virtual machine?",
         "size": "What size should the virtual machine have? We have {{ sizes }} "
     }
 }
