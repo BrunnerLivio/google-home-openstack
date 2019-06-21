@@ -4,7 +4,7 @@
 command Google Home to.**
 
 [![Gitter](https://badges.gitter.im/brunnel/google-home-openstack.svg)](https://gitter.im/google-home-openstack/)
-[![Circle CI Status](https://circleci.com/gh/BRUNNEL6/google-home-openstack.png?circle-token=2c7bd0eebaeb959c02572c8990b17d5836ac51c5&style=shield)](https://circleci.com/gh/BRUNNEL6/google-home-openstack)
+[![Circle CI Status](https://circleci.com/gh/BRUNNEL6/google-home-openstack.png?circle-token=2c7bd0eebaeb959c02572c8990b17d5836ac51c5&style=shield)](https://circleci.com/gh/BRUNNEL6/google-home-openstack) [![Greenkeeper badge](https://badges.greenkeeper.io/BrunnerLivio/google-home-openstack.svg)](https://greenkeeper.io/)
 
 ![Architecture](assets/architecture.svg)
 
