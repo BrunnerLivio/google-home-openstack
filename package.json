@@ -41,7 +41,7 @@
     "node-emoji": "^1.8.1",
     "openstack-wrapper": "git+https://github.com/BRUNNEL6/node-openstack-wrapper.git",
     "p-iteration": "^1.1.7",
-    "rxjs": "^5.5.2",
+    "rxjs": "^6.5.3",
     "safename": "^1.0.2",
     "winston": "^3.0.0"
   },
