@@ -29,7 +29,7 @@
     "axios": "^0.18.0",
     "byte-converter": "^0.1.4",
     "chalk": "^2.4.1",
-    "figlet": "^1.2.0",
+    "figlet": "^1.2.4",
     "file-size": "^1.0.0",
     "fs-promise": "^2.0.3",
     "humanize-list": "^1.0.1",
