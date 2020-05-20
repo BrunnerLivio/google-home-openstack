@@ -46,7 +46,7 @@
     "winston": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^10.5.2",
+    "@types/node": "^14.0.4",
     "@types/openstack-wrapper": "^2.1.1",
     "nodemon": "^1.18.3",
     "typescript": "^2.9.2"
